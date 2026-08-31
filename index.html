@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nihira Lotliker — Portfolio</title>
+
+<!-- FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet" />
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<style>
+  :root {
+    --accent-color: #6F4E37;        /* coffee brown */
+    --accent-soft:  #A0785A;
+    --accent-tint:  #F3ECE6;
+    --bg:           #FAFAF8;
+    --bg-alt:        #F2F0EC;
+    --text:          #2B2724;
+    --text-muted:    #6B645E;
+    --line:          #E4E0DA;
+    --card:          #FFFFFF;
+    --radius:        14px;
+    --shadow:        0 6px 24px rgba(111, 78, 55, 0.08);
+    --shadow-hover:  0 18px 48px rgba(111, 78, 55, 0.16);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+    cursor: none !important;
+  }
+
+  a, button { cursor: none !important; }
+
+  ::selection {
+    background: var(--accent-color);
+    color: #fff;
+  }
+  ::-moz-selection {
+    background: var(--accent-color);
+    color: #fff;
+  }
+
+  /* ===== Custom Cursor ===== */
+  .cursor-dot {
+    position: fixed;
+    top: 0; left: 0;
+    width: 8px; height: 8px;
+    background: var(--accent-color);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-50%, -50%);
+    transition: width .25s ease, height .25s ease, background .25s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    position: fixed;
+    top: 0; left: 0;
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--accent-color);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-50%, -50%);
+    transition: width .3s ease, height .3s ease, border-color .3s ease, background .3s ease, opacity .3s ease;
+  }
+  .cursor-ring.hovering {
+    width: 60px; height: 60px;
+    background: rgba(111, 78, 55, 0.10);
+    border-color: var(--accent-soft);
+  }
+  .cursor-dot.hovering {
+    width: 4px; height: 4px;
+  }
+
+  /* ===== Layout ===== */
+  .container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ===== Nav ===== */
+  nav {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    z-index: 1000;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(250, 250, 248, 0.72);
+    border-bottom: 1px solid var(--line);
+    transition: padding .3s ease;
+  }
+  nav .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 68px;
+  }
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: -.02em;
+  }
+  .logo span { color: var(--accent-color); }
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+  .nav-links a {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: .92rem;
+    font-weight: 500;
+    position: relative;
+    transition: color .25s ease;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -6px; left: 0;
+    width: 0; height: 2px;
+    background: var(--accent-color);
+    transition: width .3s ease;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* ===== Hero ===== */
+  header.hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 120px 0 80px;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.3fr .9fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: .82rem;
+    font-weight: 500;
+    color: var(--accent-color);
+    background: var(--accent-tint);
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin-bottom: 22px;
+  }
+  .hero-eyebrow .dot {
+    width: 7px; height: 7px;
+    background: var(--accent-color);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .4; }
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    line-height: 1.08;
+    letter-spacing: -.02em;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  .hero h1 .accent { color: var(--accent-color); }
+  .hero p.lead {
+    font-size: 1.08rem;
+    color: var(--text-muted);
+    max-width: 480px;
+    margin-bottom: 32px;
+  }
+  .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 13px 26px;
+    border-radius: 999px;
+    font-size: .92rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease;
+  }
+  .btn-primary {
+    background: var(--accent-color);
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(111, 78, 55, 0.25);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(111, 78, 55, 0.32);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text);
+    border: 1.5px solid var(--line);
+  }
+  .btn-ghost:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    transform: translateY(-2px);
+  }
+
+  /* Hero profile card */
+  .hero-visual {
+    display: flex;
+    justify-content: center;
+  }
+  .profile-card {
+    position: relative;
+    width: 280px;
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px 24px;
+    text-align: center;
+    border: 1px solid var(--line);
+    transition: transform .4s ease;
+  }
+  .profile-card::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: var(--radius);
+    background: linear-gradient(145deg, var(--accent-tint), transparent 60%);
+    z-index: -1;
+  }
+  .profile-avatar-wrap {
+    width: 120px; height: 120px;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    padding: 4px;
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-soft));
+  }
+  .profile-avatar {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    background: var(--bg-alt);
+  }
+  .profile-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+  .profile-handle {
+    color: var(--text-muted);
+    font-size: .88rem;
+    margin-top: 2px;
+  }
+  .profile-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+  .stat-num {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--accent-color);
+  }
+  .stat-label {
+    font-size: .74rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-top: 2px;
+  }
+
+  /* ===== Sections ===== */
+  section { padding: 90px 0; }
+  .section-head { margin-bottom: 48px; }
+  .section-tag {
+    font-size: .8rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    margin-bottom: 10px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+    font-weight: 600;
+    letter-spacing: -.01em;
+  }
+
+  /* About */
+  .about-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 40px;
+    box-shadow: var(--shadow);
+  }
+  .about-text { font-size: 1.05rem; color: var(--text-muted); }
+  .about-text strong { color: var(--text); font-weight: 600; }
+  .social-row {
+    display: flex;
+    gap: 14px;
+    margin-top: 28px;
+  }
+  .social-link {
+    width: 46px; height: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: var(--bg-alt);
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    text-decoration: none;
+    border: 1px solid var(--line);
+    transition: transform .25s ease, color .25s ease, background .25s ease, border-color .25s ease;
+  }
+  .social-link:hover {
+    transform: translateY(-3px);
+    color: #fff;
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+  }
+
+  /* Projects grid */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 26px;
+  }
+  .project-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 28px;
+    box-shadow: var(--shadow);
+    transition: box-shadow .35s ease;
+    transform-style: preserve-3d;
+    will-change: transform;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+  }
+  .project-card:hover { box-shadow: var(--shadow-hover); }
+  .project-card .card-inner { transform: translateZ(40px); }
+  .project-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .project-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: var(--accent-tint);
+    color: var(--accent-color);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+  }
+  .project-stars {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: .82rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .project-stars i { color: #E0A458; }
+  .project-name {
+    font-size: 1.12rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .project-desc {
+    font-size: .92rem;
+    color: var(--text-muted);
+    flex: 1;
+    margin-bottom: 18px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .project-lang {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: .8rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .lang-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent-color);
+  }
+
+  /* Loading skeleton */
+  .skeleton-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 28px;
+    height: 220px;
+    overflow: hidden;
+  }
+  .skeleton-line {
+    height: 12px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, var(--bg-alt) 25%, var(--line) 50%, var(--bg-alt) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    margin-bottom: 12px;
+  }
+  .skeleton-line.short { width: 50%; }
+  .skeleton-line.mid { width: 75%; }
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* Error state */
+  .error-box {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--text-muted);
+    background: var(--accent-tint);
+    border-radius: var(--radius);
+    border: 1px dashed var(--accent-soft);
+  }
+  .error-box i { font-size: 1.8rem; color: var(--accent-color); margin-bottom: 12px; display: block; }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 40px 0;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: .9rem;
+  }
+  footer a { color: var(--accent-color); text-decoration: none; font-weight: 500; }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 860px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+    .hero-eyebrow, .hero p.lead { margin-left: auto; margin-right: auto; }
+    .hero-actions { justify-content: center; }
+    .hero-visual { order: -1; }
+    .profile-card { width: 100%; max-width: 320px; }
+    .nav-links { display: none; }
+    .about-card { padding: 28px; }
+    section { padding: 64px 0; }
+  }
+  @media (max-width: 480px) {
+    .container { padding: 0 18px; }
+    .social-row { flex-wrap: wrap; }
+    .hero-actions .btn { flex: 1; justify-content: center; }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Nav -->
+<nav>
+  <div class="container nav-inner">
+    <a href="#hero" class="logo">Nihira<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="https://github.com/nihiralotliker" target="_blank" rel="noopener">GitHub</a></li>
+      <li><a href="https://www.linkedin.com/in/nihira-lotliker-66a833287" target="_blank" rel="noopener">LinkedIn</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Hero -->
+<header class="hero" id="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-text">
+        <div class="hero-eyebrow"><span class="dot"></span> Student & Developer</div>
+        <h1>Hi, I'm Nihira <br />Lotliker<span class="accent">.</span></h1>
+        <p class="lead">Student at Don Bosco College of Engineering, exploring the world of code and building things for the web. Always learning, always curious.</p>
+        <div class="hero-actions">
+          <a href="#projects" class="btn btn-primary"><i class="fa-solid fa-code"></i> View Projects</a>
+          <a href="https://github.com/nihiralotliker" target="_blank" rel="noopener" class="btn btn-ghost"><i class="fa-brands fa-github"></i> GitHub</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="profile-card" id="profileCard">
+          <div class="profile-avatar-wrap">
+            <img class="profile-avatar" id="ghAvatar" src="" alt="Nihira Lotliker" />
+          </div>
+          <div class="profile-name" id="ghName">Nihira Lotliker</div>
+          <div class="profile-handle" id="ghHandle">@nihiralotliker</div>
+          <div class="profile-stats">
+            <div>
+              <div class="stat-num" id="ghRepos">—</div>
+              <div class="stat-label">Repos</div>
+            </div>
+            <div>
+              <div class="stat-num" id="ghFollowers">—</div>
+              <div class="stat-label">Followers</div>
+            </div>
+            <div>
+              <div class="stat-num" id="ghFollowing">—</div>
+              <div class="stat-label">Following</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- About -->
+<section id="about">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-tag">About</div>
+      <h2 class="section-title">A little about me</h2>
+    </div>
+    <div class="about-card">
+      <p class="about-text">I'm a <strong>student at Don Bosco College of Engineering</strong> with a growing passion for software and the web. I enjoy turning ideas into clean, functional code — whether it's a quick experiment or a larger project. When I'm not studying, you'll find me exploring new tools, contributing to repositories on GitHub, and sharpening my craft one commit at a time.</p>
+      <div class="social-row">
+        <a href="https://github.com/nihiralotliker" target="_blank" rel="noopener" class="social-link" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+        <a href="https://www.linkedin.com/in/nihira-lotliker-66a833287" target="_blank" rel="noopener" class="social-link" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Projects -->
+<section id="projects">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-tag">Projects</div>
+      <h2 class="section-title">Top repositories from GitHub</h2>
+    </div>
+    <div class="projects-grid" id="projectsGrid">
+      <!-- Skeletons injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    Built with care by <a href="https://github.com/nihiralotliker" target="_blank" rel="noopener">Nihira Lotliker</a> · © <span id="year"></span>
+  </div>
+</footer>
+
+<script>
+  /* ============================================================
+     CONFIG — hardcoded user details
+     ============================================================ */
+  const GITHUB_USERNAME = "nihiralotliker";
+  const LINKEDIN_URL    = "https://www.linkedin.com/in/nihira-lotliker-66a833287";
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* ============================================================
+     CUSTOM CURSOR
+     ============================================================ */
+  (function initCursor() {
+    if (window.matchMedia('(pointer: coarse)').matches) {
+      // Touch device — remove custom cursor
+      document.body.style.cursor = 'auto';
+      document.getElementById('cursorDot').style.display = 'none';
+      document.getElementById('cursorRing').style.display = 'none';
+      return;
+    }
+
+    const dot  = document.getElementById('cursorDot');
+    const ring = document.getElementById('cursorRing');
+    let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+    let ringX = mouseX, ringY = mouseY;
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      // dot follows instantly
+      dot.style.left = mouseX + 'px';
+      dot.style.top  = mouseY + 'px';
+    });
+
+    // ring follows with slight lag (lerp)
+    function animateRing() {
+      ringX += (mouseX - ringX) * 0.18;
+      ringY += (mouseY - ringY) * 0.18;
+      ring.style.left = ringX + 'px';
+      ring.style.top  = ringY + 'px';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    // hover state on interactive elements
+    const hoverables = 'a, button, .project-card, .profile-card, .social-link';
+    document.querySelectorAll(hoverables).forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        dot.classList.add('hovering');
+        ring.classList.add('hovering');
+      });
+      el.addEventListener('mouseleave', () => {
+        dot.classList.remove('hovering');
+        ring.classList.remove('hovering');
+      });
+    });
+  })();
+
+  /* ============================================================
+     GITHUB API
+     ============================================================ */
+  const API_USER  = `https://api.github.com/users/${GITHUB_USERNAME}`;
+  const API_REPOS = `https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100`;
+
+  // Language colors (common subset)
+  const LANG_COLORS = {
+    JavaScript: '#f1e05a',
+    TypeScript: '#3178c6',
+    Python:     '#3572A5',
+    HTML:       '#e34c26',
+    CSS:        '#563d7c',
+    Java:       '#b07219',
+    'C++':      '#f34b7d',
+    C:          '#555555',
+    'C#':       '#178600',
+    PHP:        '#4F5D95',
+    Ruby:       '#701516',
+    Go:         '#00ADD8',
+    Rust:       '#dea584',
+    Shell:      '#89e051',
+    Dart:       '#00B4AB',
+    Vue:        '#41b883',
+    Kotlin:     '#A97BFF',
+    Swift:      '#F05138',
+    Jupyter:    '#DA5B0B',
+    SCSS:       '#c6538c',
+  };
+
+  function langColor(lang) {
+    if (!lang) return 'var(--accent-color)';
+    return LANG_COLORS[lang] || '#8b7355';
+  }
+
+  function showSkeletons() {
+    const grid = document.getElementById('projectsGrid');
+    grid.innerHTML = '';
+    for (let i = 0; i < 4; i++) {
+      const sk = document.createElement('div');
+      sk.className = 'skeleton-card';
+      sk.innerHTML = `
+        <div class="skeleton-line mid"></div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line short"></div>`;
+      grid.appendChild(sk);
+    }
+  }
+
+  function showError(msg) {
+    const grid = document.getElementById('projectsGrid');
+    grid.innerHTML = `
+      <div class="error-box">
+        <i class="fa-solid fa-cloud-bolt"></i>
+        <p>${msg}</p>
+        <p style="margin-top:8px;font-size:.85rem">You can still visit my <a href="https://github.com/nihiralotliker" target="_blank" rel="noopener" style="color:var(--accent-color);font-weight:600">GitHub profile</a> directly.</p>
+      </div>`;
+  }
+
+  async function fetchGitHub() {
+    showSkeletons();
+
+    // Profile + repos in parallel
+    const [userRes, reposRes] = await Promise.allSettled([
+      fetch(API_USER),
+      fetch(API_REPOS)
+    ]);
+
+    // ---- Profile ----
+    if (userRes.status === 'fulfilled' && userRes.value.ok) {
+      const u = await userRes.value.json();
+      document.getElementById('ghAvatar').src = u.avatar_url || '';
+      if (u.name) document.getElementById('ghName').textContent = u.name;
+      document.getElementById('ghHandle').textContent = '@' + (u.login || GITHUB_USERNAME);
+      document.getElementById('ghRepos').textContent = u.public_repos ?? 0;
+      document.getElementById('ghFollowers').textContent = u.followers ?? 0;
+      document.getElementById('ghFollowing').textContent = u.following ?? 0;
+    }
+
+    // ---- Repos ----
+    const grid = document.getElementById('projectsGrid');
+    if (reposRes.status !== 'fulfilled' || !reposRes.value.ok) {
+      showError('Could not load repositories right now. GitHub may be rate-limiting this page.');
+      return;
+    }
+    const repos = await reposRes.value.json();
+
+    // sort by stars, then forks, then updated
+    const sorted = repos
+      .filter(r => !r.fork)
+      .sort((a, b) => (b.stargazers_count - a.stargazers_count) || (b.forks_count - a.forks_count));
+
+    if (!sorted.length) {
+      showError('No public repositories found yet — check back soon!');
+      return;
+    }
+
+    grid.innerHTML = '';
+    sorted.slice(0, 8).forEach((repo, i) => {
+      const card = document.createElement('a');
+      card.className = 'project-card reveal';
+      card.href = repo.html_url;
+      card.target = '_blank';
+      card.rel = 'noopener';
+      const lang = repo.language || '—';
+      const desc = repo.description || 'No description provided.';
+      const stars = repo.stargazers_count || 0;
+      const forks = repo.forks_count || 0;
+      card.innerHTML = `
+        <div class="card-inner">
+          <div class="project-top">
+            <div class="project-icon"><i class="fa-solid fa-code-branch"></i></div>
+            <div class="project-stars"><i class="fa-solid fa-star"></i> ${stars} · <i class="fa-solid fa-code-fork"></i> ${forks}</div>
+          </div>
+          <div class="project-name">${repo.name}</div>
+          <div class="project-desc">${desc}</div>
+          <div class="project-lang"><span class="lang-dot" style="background:${langColor(lang)}"></span> ${lang}</div>
+        </div>`;
+      card.style.opacity = '0';
+      grid.appendChild(card);
+    });
+
+    // animate cards in + attach tilt
+    initProjectAnimations();
+  }
+
+  /* ============================================================
+     GSAP ANIMATIONS
+     ============================================================ */
+  function initHeroAnimation() {
+    if (typeof gsap === 'undefined') return;
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    tl.from('.hero-eyebrow', { y: 20, opacity: 0, duration: .6 })
+      .from('.hero h1',      { y: 30, opacity: 0, duration: .8 }, '-=.3')
+      .from('.hero .lead',   { y: 20, opacity: 0, duration: .7 }, '-=.4')
+      .from('.hero-actions .btn', { y: 20, opacity: 0, duration: .5, stagger: .1 }, '-=.3')
+      .from('.profile-card', { y: 40, opacity: 0, scale: .96, duration: .9 }, '-=.7');
+  }
+
+  function initProjectAnimations() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      // fallback: just show
+      document.querySelectorAll('.reveal').forEach(el => { el.style.opacity = '1'; });
+      attachTilt();
+      return;
+    }
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.utils.toArray('.project-card.reveal').forEach((card) => {
+      gsap.to(card, {
+        opacity: 1,
+        y: 0,
+        duration: .7,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: card,
+          start: 'top 88%',
+          toggleActions: 'play none none none',
+        }
+      });
+      gsap.from(card, { y: 50, duration: .7, ease: 'power3.out' });
+    });
+
+    // About card reveal
+    gsap.from('.about-card', {
+      y: 50, opacity: 0, duration: .8, ease: 'power3.out',
+      scrollTrigger: { trigger: '.about-card', start: 'top 85%' }
+    });
+
+    attachTilt();
+  }
+
+  /* ============================================================
+     3D TILT on project cards
+     ============================================================ */
+  function attachTilt() {
+    if (window.matchMedia('(pointer: coarse)').matches) return;
+    document.querySelectorAll('.project-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const cx = rect.width / 2;
+        const cy = rect.height / 2;
+        const rotateX = ((y - cy) / cy) * -7;
+        const rotateY = ((x - cx) / cx) * 7;
+        card.style.transform = `perspective(700px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(700px) rotateX(0) rotateY(0) translateY(0)';
+      });
+    });
+  }
+
+  /* ============================================================
+     INIT
+     ============================================================ */
+  document.addEventListener('DOMContentLoaded', () => {
+    initHeroAnimation();
+    fetchGitHub().catch(() => showError('Something went wrong while loading data from GitHub.'));
+  });
+</script>
+</body>
+</html>
